@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CKT-UTAS Election Results</title>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --background-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --text-color: #333;
+    --light-text: #7f8c8d;
+    --border-color: #e0e0e0;
+    --success-color: #27ae60;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.12);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    padding: 0;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 2rem 0;
+    text-align: center;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    font-weight: 300;
+  }
+
+  .stats-bar {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .stat-card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 1.5rem;
+    flex: 1;
+    min-width: 200px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .stat-card i {
+    font-size: 2rem;
+    color: var(--secondary-color);
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-card h3 {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-card p {
+    color: var(--light-text);
+    font-size: 0.9rem;
+  }
+
+  .portfolio-section {
+    background: var(--card-bg);
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .portfolio-section:hover {
+    box-shadow: var(--shadow-hover);
+  }
+
+  .portfolio-header {
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .portfolio-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+
+  .winner-badge {
+    background-color: var(--success-color);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .portfolio-content {
+    padding: 1.5rem;
+  }
+
+  .chart-container {
+    position: relative;
+    height: 400px;
+    margin-bottom: 1rem;
+  }
+
+  .chart-wrapper {
+    position: relative;
+    height: 100%;
+  }
+
+  .candidate-img {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background-color: white;
+    transform: translateX(-50%);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 10;
+    object-fit: cover;
+  }
+
+  .candidate-list {
+    margin-top: 1.5rem;
+  }
+
+  .candidate-item {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s ease;
+  }
+
+  .candidate-item:last-child {
+    border-bottom: none;
+  }
+
+  .candidate-item:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+
+  .candidate-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 1rem;
+    object-fit: cover;
+    border: 2px solid var(--border-color);
+  }
+
+  .candidate-info {
+    flex: 1;
+  }
+
+  .candidate-name {
+    font-weight: 500;
+    margin-bottom: 0.2rem;
+  }
+
+  .candidate-votes {
+    color: var(--light-text);
+    font-size: 0.9rem;
+  }
+
+  .vote-percentage {
+    font-weight: 600;
+    color: var(--primary-color);
+  }
+
+  .winner-icon {
+    color: var(--success-color);
+    margin-left: 0.5rem;
+  }
+
+  footer {
+    text-align: center;
+    padding: 2rem 0;
+    color: var(--light-text);
+    font-size: 0.9rem;
+    margin-top: 2rem;
+  }
+
+  /* Responsive adjustments */
+  @media screen and (max-width: 768px) {
+    h1 {
+      font-size: 2rem;
+    }
+
+    .stats-bar {
+      flex-direction: column;
+    }
+
+    .stat-card {
+      min-width: 100%;
+    }
+
+    .portfolio-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .chart-container {
+      height: 300px;
+    }
+
+    .candidate-img {
+      width: 50px;
+      height: 50px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .container {
+      padding: 10px;
+    }
+
+    header {
+      padding: 1.5rem 0;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+    }
+
+    .chart-container {
+      height: 250px;
+    }
+
+    .candidate-item {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .candidate-avatar {
+      margin-right: 0;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  /* Animation for chart loading */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .portfolio-section {
+    animation: fadeIn 0.6s ease forwards;
+  }
+
+  /* Delay animations for each section */
+  .portfolio-section:nth-child(1) { animation-delay: 0.1s; }
+  .portfolio-section:nth-child(2) { animation-delay: 0.2s; }
+  .portfolio-section:nth-child(3) { animation-delay: 0.3s; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>CKT-UTAS Election Results</h1>
+    <p class="subtitle">2025 Student Representative Council Elections</p>
+  </div>
+</header>
+
+<div class="container">
+  <!-- Statistics Bar -->
+  <div class="stats-bar">
+    <div class="stat-card">
+      <i class="fas fa-users"></i>
+      <h3>305</h3>
+      <p>Total Votes Cast</p>
+    </div>
+    <div class="stat-card">
+      <i class="fas fa-user-check"></i>
+      <h3>5</h3>
+      <p>Positions</p>
+    </div>
+    <div class="stat-card">
+      <i class="fas fa-chart-line"></i>
+      <h3>78%</h3>
+      <p>Voter Turnout</p>
+    </div>
+  </div>
+
+  <!-- Portfolio Sections will be generated here -->
+  <div id="results-container"></div>
+</div>
+
+<footer>
+  <div class="container">
+    <p>© 2023 CKT-UTAS Election Commission. All rights reserved.</p>
+    <p>Results last updated: <span id="update-time"></span></p>
+  </div>
+</footer>
+
+<script>
+  // Enhanced data structure with more details
+  const electionData = [
+    {
+      portfolio: 'President',
+      totalVotes: 305,
+      candidates: [
+        { 
+          name: 'John Mensah', 
+          votes: 125, 
+          percentage: 41.0,
+          image: 'https://randomuser.me/api/portraits/men/32.jpg',
+          department: 'Computer Science'
+        },
+        { 
+          name: 'Ama Asante', 
+          votes: 100, 
+          percentage: 32.8,
+          image: 'https://randomuser.me/api/portraits/women/44.jpg',
+          department: 'Business Administration'
+        },
+        { 
+          name: 'Kwame Osei', 
+          votes: 80, 
+          percentage: 26.2,
+          image: 'https://randomuser.me/api/portraits/men/67.jpg',
+          department: 'Engineering'
+        }
+      ]
+    },
+    {
+      portfolio: 'Vice President',
+      totalVotes: 290,
+      candidates: [
+        { 
+          name: 'Esi Boateng', 
+          votes: 110, 
+          percentage: 37.9,
+          image: 'https://randomuser.me/api/portraits/women/63.jpg',
+          department: 'Nursing'
+        },
+        { 
+          name: 'Yaw Appiah', 
+          votes: 90, 
+          percentage: 31.0,
+          image: 'https://randomuser.me/api/portraits/men/45.jpg',
+          department: 'Agriculture'
+        },
+        { 
+          name: 'Adwoa Safo', 
+          votes: 90, 
+          percentage: 31.0,
+          image: 'https://randomuser.me/api/portraits/women/28.jpg',
+          department: 'Education'
+        }
+      ]
+    },
+    {
+      portfolio: 'Secretary',
+      totalVotes: 280,
+      candidates: [
+        { 
+          name: 'Nana Kwaku', 
+          votes: 95, 
+          percentage: 33.9,
+          image: 'https://randomuser.me/api/portraits/men/22.jpg',
+          department: 'Law'
+        },
+        { 
+          name: 'Akosua Danso', 
+          votes: 70, 
+          percentage: 25.0,
+          image: 'https://randomuser.me/api/portraits/women/33.jpg',
+          department: 'Medicine'
+        },
+        { 
+          name: 'Kofi Ansah', 
+          votes: 115, 
+          percentage: 41.1,
+          image: 'https://randomuser.me/api/portraits/men/75.jpg',
+          department: 'Architecture'
+        }
+      ]
+    }
+  ];
+
+  // Set last updated time
+  document.getElementById('update-time').textContent = new Date().toLocaleString();
+
+  // Main function to create chart and position images
+  function createResults() {
+    const container = document.getElementById('results-container');
+
+    electionData.forEach((portfolioData, index) => {
+      // Find the winner
+      const winner = portfolioData.candidates.reduce((prev, current) => 
+        (prev.votes > current.votes) ? prev : current);
+
+      // Create section wrapper
+      const section = document.createElement('div');
+      section.classList.add('portfolio-section');
+
+      // Portfolio header with title and winner badge
+      const header = document.createElement('div');
+      header.classList.add('portfolio-header');
+      
+      const title = document.createElement('div');
+      title.classList.add('portfolio-title');
+      title.textContent = portfolioData.portfolio;
+      
+      const badge = document.createElement('div');
+      badge.classList.add('winner-badge');
+      badge.innerHTML = `<i class="fas fa-trophy"></i> Winner: ${winner.name}`;
+      
+      header.appendChild(title);
+      header.appendChild(badge);
+      section.appendChild(header);
+
+      // Portfolio content
+      const content = document.createElement('div');
+      content.classList.add('portfolio-content');
+
+      // Create chart container and wrapper for relative positioning
+      const chartWrapper = document.createElement('div');
+      chartWrapper.classList.add('chart-wrapper');
+
+      const canvas = document.createElement('canvas');
+      canvas.id = `chart-${index}`;
+      chartWrapper.appendChild(canvas);
+      content.appendChild(chartWrapper);
+
+      // Create candidate list
+      const candidateList = document.createElement('div');
+      candidateList.classList.add('candidate-list');
+
+      portfolioData.candidates.sort((a, b) => b.votes - a.votes).forEach(candidate => {
+        const candidateItem = document.createElement('div');
+        candidateItem.classList.add('candidate-item');
+
+        const avatar = document.createElement('img');
+        avatar.src = candidate.image;
+        avatar.alt = candidate.name;
+        avatar.classList.add('candidate-avatar');
+
+        const info = document.createElement('div');
+        info.classList.add('candidate-info');
+
+        const name = document.createElement('div');
+        name.classList.add('candidate-name');
+        name.textContent = candidate.name;
+        if (candidate.name === winner.name) {
+          name.innerHTML += ` <i class="fas fa-crown winner-icon"></i>`;
+        }
+
+        const votes = document.createElement('div');
+        votes.classList.add('candidate-votes');
+        votes.textContent = `${candidate.votes} votes (${candidate.percentage}%) • ${candidate.department}`;
+
+        info.appendChild(name);
+        info.appendChild(votes);
+        candidateItem.appendChild(avatar);
+        candidateItem.appendChild(info);
+        candidateList.appendChild(candidateItem);
+      });
+
+      content.appendChild(candidateList);
+      section.appendChild(content);
+      container.appendChild(section);
+
+      // Extract candidate names and votes
+      const labels = portfolioData.candidates.map(c => c.name);
+      const votes = portfolioData.candidates.map(c => c.votes);
+      const images = portfolioData.candidates.map(c => c.image);
+
+      // Create Chart.js bar chart
+      const ctx = canvas.getContext('2d');
+      const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Votes',
+            data: votes,
+            backgroundColor: [
+              'rgba(52, 152, 219, 0.7)',
+              'rgba(155, 89, 182, 0.7)',
+              'rgba(46, 204, 113, 0.7)',
+              'rgba(241, 196, 15, 0.7)',
+              'rgba(231, 76, 60, 0.7)'
+            ],
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: '#fff'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: {
+            duration: 1200,
+            easing: 'easeOutQuart',
+            onComplete: function() {
+              // After animation completes, position images on bars
+              positionCandidateImages(canvas, votes, images);
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 20,
+                color: '#7f8c8d'
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              },
+              ticks: {
+                color: '#7f8c8d'
+              }
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              enabled: true,
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              titleFont: { size: 14, weight: 'bold' },
+              bodyFont: { size: 12 },
+              callbacks: {
+                label: ctx => `${ctx.parsed.y} votes (${((ctx.parsed.y / portfolioData.totalVotes) * 100).toFixed(1)}%)`,
+                afterLabel: ctx => {
+                  const candidate = portfolioData.candidates[ctx.dataIndex];
+                  return `Department: ${candidate.department}`;
+                }
+              }
+            }
+          }
+        }
+      });
+    });
+  }
+
+  // Function to position candidate images above their respective bars
+  function positionCandidateImages(canvas, votes, images) {
+    // Remove any existing candidate images inside wrapper
+    const wrapper = canvas.parentElement;
+    const existingImgs = wrapper.querySelectorAll('.candidate-img');
+    existingImgs.forEach(img => img.remove());
+
+    const chart = Chart.getChart(canvas);
+    if (!chart) return;
+
+    const meta = chart.getDatasetMeta(0);
+    const yAxis = chart.scales.y;
+    const xAxis = chart.scales.x;
+
+    votes.forEach((vote, i) => {
+      const bar = meta.data[i];
+      if (!bar) return;
+    
+      // Calculate the center X position of the bar
+      const centerX = bar.x;
+      const topY = bar.y;
+
+      // Create image element
+      const img = document.createElement('img');
+      img.src = images[i];
+      img.alt = `Candidate ${i + 1}`;
+      img.classList.add('candidate-img');
+
+      wrapper.appendChild(img);
+
+      const gap = 8;
+      img.style.left = `${centerX}px`;
+      img.style.top = `${topY - img.offsetHeight - gap}px`;
+    });
+  }
+
+  window.addEventListener('load', createResults);
+
+  window.addEventListener('resize', () => {
+    electionData.forEach((portfolioData, index) => {
+      const canvas = document.getElementById(`chart-${index}`);
+      if (!canvas) return;
+
+      const votes = portfolioData.candidates.map(c => c.votes);
+      const images = portfolioData.candidates.map(c => c.image);
+
+      positionCandidateImages(canvas, votes, images);
+    });
+  });
+</script>
+</body>
+</html>

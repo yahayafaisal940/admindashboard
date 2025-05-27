@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ballot</title>
+    <style>
+        .wrapper {
+            width: 100%;
+            height: 97vh;
+            background-color: cadetblue;
+        }
+        .content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-content {
+            width: 60%;
+            height: 80%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .candidates {
+            background-color: #fff;
+            width: 100%;
+            height: 100%;
+            flex: 1 0 160;
+        }
+
+        .candidate-card {
+            background-color: #ccc;
+            width: 160px;
+            height: 160px;
+            text-align: center;
+        }
+
+        .candidate-card img {
+            width: 160px;
+            border: 2px solid #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="content">
+            <h1>CKT UTAS EVOTING SYSTEM</h1>
+            <div class="main-content">
+                <h2>Election Title</h2>
+                <h3>Position</h3>
+                <div class="candidates">
+                    <div class="candidate-card">
+                        <img src="" alt="candidate-photo">
+                        <p>Cnadidate Name</p>
+                        <p>Candidate Election</p>
+                        <input type="radio" name="candidate" id="candidate_vote" title="vote">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

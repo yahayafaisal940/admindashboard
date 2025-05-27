@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Election</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="assets/css/form.css">
+</head>
+
+<body>
+    <header>
+        <div class="logosec">
+            <img src="assets/media/icons8-menu-50.png" class="icn menuicn" id="menuicn" alt="menu-icon">
+
+            <div class="logo">CKT UTAS EVOTING</div>
+        </div>
+
+        <div class="message">
+            <div class="circle"></div>
+            <img src="assets/media/icons8-notification-50.png" class="icn" alt="">
+            <div class="dp">
+                <img src="assets/media/icons8-avatar-50.png" class="dpicn" alt="dp">
+            </div>
+        </div>
+    </header>
+
+
+    <div class="main-container">
+        <div class="navcontainer">
+            <nav class="nav">
+                <div class="nav-upper-options">
+                    <div class="nav-option option1">
+                        <img src="assets/media/icons8-dashboard-48.png" class="nav-img" alt="dashboard">
+                        <h3><a href="index.html">Dashboard</a></h3>
+                    </div>
+
+                    <div class="option2 nav-option">
+                        <img src="assets/media/icons8-box-50.png" class="nav-img" alt="elections">
+                        <h3><a href="./elections.html">Elections</a></h3>
+                    </div>
+
+                    <div class="nav-option option3">
+                        <img src="assets/media/icons8-users-60.png" class="nav-img" alt="officials">
+                        <h3><a href="./officials.html">Officials</a></h3>
+                    </div>
+
+                    <div class="nav-option option4">
+                        <img src="assets/media/icons8-users-60.png" class="nav-img" alt="candidates">
+                        <h3><a href="./candidates.html">Candidates</a></h3>
+                    </div>
+
+                    <div class="nav-option option5">
+                        <img src="assets/media/icons8-users-60.png" class="nav-img" alt="voters">
+                        <h3><a href="./voters.html">Voters</a></h3>
+                    </div>
+
+                    <div class="nav-option option5">
+                        <img src="assets/media/icons8-paper-50.png" class="nav-img" alt="voters">
+                        <h3><a href="./ballot.html">Ballot</a></h3>
+                    </div>
+
+                    <div class="nav-option option6">
+                        <img src="assets/media/icons8-chart-50.png" class="nav-img" alt="results">
+                        <h3> Live Results</h3>
+                    </div>
+
+                    <div class="nav-option option7">
+                        <img src="assets/media/icons8-cog-50.png" class="nav-img" alt="logs">
+                        <h3> System Logs </h3>
+                    </div>
+
+                    <div class="nav-option option8">
+                        <img src="assets/media/icons8-error-50.png" class="nav-img" alt="errors">
+                        <h3> Error Pages </h3>
+                    </div>
+
+                    <div class="nav-option logout">
+                        <img src="assets/media/icons8-logout-60.png" class="nav-img" alt="logout">
+                        <h3>Logout</h3>
+                    </div>
+
+                </div>
+            </nav>
+        </div>
+        <div class="main">
+
+            <!-- Form to add a new election -->
+
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Add Position</h2>
+                </div>
+                <div class="form-description">
+                    <p>Please fill in the details below to add a new position.</p>
+                </div>
+                <form action="#" method="post">
+                    <label for="position-name">Position Name:</label>
+                    <input type="text" id="position-name" name="position_name" required>
+
+                    <label for="election">Election:</label>    
+                    <select id="election" name="election" required>
+                        <option value="" disabled selected>Select an election</option>
+                        <option value="election1">Election 1</option>
+                        <option value="election2">Election 2</option>
+                        <option value="election3">Election 3</option>
+                    </select> 
+
+                    <button type="submit" class="btn">Add Position</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>
